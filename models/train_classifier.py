@@ -21,6 +21,14 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
 def load_data(database_filepath):
+    """
+    Loads data from database
+    Args:
+        database_filepath: path to database
+    Returns:
+        (DataFrame) X: feature
+        (DataFrame) Y: labels
+    """
     # load data from database
     engine = DB.create_engine('sqlite:///' + database_filepath)
     df = pd.read_sql('select * from myTable', con=engine)
@@ -30,6 +38,14 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    """
+    Tokenizes a given text.
+    Args:
+        text: text string
+    Returns:
+        (str[]): array of clean tokens
+    """
+
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
     clean_tokens = []
@@ -41,7 +57,7 @@ def tokenize(text):
 
 
 def build_model():
-
+    """ Building the model """
     # Creating pipeline
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize)),
@@ -56,6 +72,15 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test):
+
+     """
+    Evaluate the model against a test dataset
+    Args:
+        model: Trained model
+        X_test: Test features
+        Y_test: Test labels
+    """
+
     Y_pred = model.predict(X_test)
 
     # Overall Accuracy
@@ -71,6 +96,14 @@ def evaluate_model(model, X_test, Y_test):
 
 
 def save_model(model, model_filepath):
+
+     """
+    Save the model to a Python pickle
+    Args:
+        model: Trained model
+        model_filepath: Path where to save the model
+    """
+    
     with open(model_filepath, 'wb') as file:
         pickle.dump(model, file)
 
